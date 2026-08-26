@@ -1,0 +1,360 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Inter:wght@400;500;600&family=Caveat:wght@500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#1A9E8F;--teal-light:#E8F8F6;--teal-mid:#B2E4DF;--teal-dark:#127A6E;
+  --cream:#F9F6F0;--text-dark:#1A2C2B;--text-mid:#4A6A68;--text-mute:#8AACAA;--border:#E0EFED;
+}
+.portal{background:var(--cream);border-radius:24px;font-family:'Inter',sans-serif;position:relative;overflow:hidden;min-height:680px}
+.portal-bg{position:absolute;inset:0;border-radius:24px;
+  background-image:radial-gradient(ellipse 90% 40% at 50% 0%,rgba(26,158,143,.07) 0%,transparent 60%),repeating-linear-gradient(0deg,transparent,transparent 32px,rgba(26,158,143,.025) 32px,rgba(26,158,143,.025) 33px),repeating-linear-gradient(90deg,transparent,transparent 32px,rgba(26,158,143,.015) 32px,rgba(26,158,143,.015) 33px);
+  pointer-events:none;z-index:0}
+.portal-inner{position:relative;z-index:1;padding:2.25rem 2.25rem 1.75rem}
+.brand-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1.25rem;border-bottom:1.5px solid var(--teal-mid)}
+.brand-logo-wrap{display:flex;align-items:center;gap:14px}
+.brand-logo-box{background:#1A2C2B;border-radius:9px;padding:7px 13px;display:flex;align-items:center}
+.brand-divider{width:1.5px;height:28px;background:var(--teal-mid)}
+.brand-portal-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
+.brand-right{text-align:right}
+.brand-sub{font-size:11px;color:var(--text-mute);letter-spacing:.04em}
+.brand-year{font-size:10px;color:var(--teal-mid);margin-top:2px;letter-spacing:.08em}
+.teal-bar{height:3px;width:48px;background:linear-gradient(90deg,var(--teal),var(--teal-mid));border-radius:99px;margin-bottom:1.5rem}
+.folders-stack{display:flex;flex-direction:column;gap:20px}
+.folder-wrap{position:relative;border-radius:16px;transition:transform .28s cubic-bezier(.34,1.2,.64,1);box-shadow:0 2px 12px rgba(26,158,143,.10),0 1px 3px rgba(0,0,0,.06);cursor:pointer}
+.folder-wrap:hover{transform:translateY(-5px);box-shadow:0 8px 28px rgba(26,158,143,.18),0 2px 8px rgba(0,0,0,.08)}
+.f-tab-row{display:flex;align-items:flex-end;gap:6px;padding:0 6px}
+.f-tab{height:28px;border-radius:8px 8px 0 0;display:inline-flex;align-items:center;gap:7px;padding:0 14px;min-width:148px}
+.f-tab-num{font-size:9px;letter-spacing:.1em;opacity:.5;font-weight:700}
+.f-tab-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.f-tag-pill{height:22px;border-radius:6px 6px 0 0;display:inline-flex;align-items:center;padding:0 11px;font-size:9px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;opacity:.65}
+.f-body{border-radius:2px 14px 14px 14px;padding:1.25rem 1.5rem;position:relative;overflow:hidden;display:flex;align-items:center;gap:1.25rem;min-height:110px}
+.f-body-texture{position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,transparent,transparent 4px,rgba(255,255,255,.06) 4px,rgba(255,255,255,.06) 5px);pointer-events:none}
+.f1 .f-tab{background:#8FAF88;color:#122010}
+.f1 .f-tag-pill{background:rgba(143,175,136,.5);color:#122010}
+.f1 .f-body{background:linear-gradient(135deg,#9DBF96,#8AAE83)}
+.f2 .f-tab{background:#C0949A;color:#2A1015}
+.f2 .f-tag-pill{background:rgba(192,148,154,.45);color:#2A1015}
+.f2 .f-body{background:linear-gradient(135deg,#CFA2A8,#BC8F95);border-radius:14px 2px 14px 14px}
+.f3 .f-tab{background:#6AAEC8;color:#0A1828}
+.f3 .f-body{background:linear-gradient(135deg,#7DC0D8,#68ADCA)}
+/* IMG ZONE — no harsh white, blend with folder */
+.img-zone{flex-shrink:0;position:relative;width:86px;height:86px}
+.img-shadow{position:absolute;top:8px;left:8px;width:70px;height:70px;border-radius:8px;background:rgba(0,0,0,.15);transform:rotate(7deg)}
+.img-main{
+  position:absolute;top:0;left:0;width:72px;height:72px;border-radius:8px;
+  background:rgba(255,255,255,.12);
+  border:1.5px solid rgba(255,255,255,.18);
+  overflow:hidden;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.img-main img{width:100%;height:100%;object-fit:cover;border-radius:7px}
+.f-content{flex:1;min-width:0}
+.f-pkg-name{font-family:'Nunito',sans-serif;font-size:19px;font-weight:900;color:rgba(0,0,0,.72);margin-bottom:2px;line-height:1.1}
+.f-pkg-sub{font-size:11px;color:rgba(0,0,0,.44);margin-bottom:.75rem}
+.f-chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.75rem}
+/* chips: dark overlay to blend with folder color */
+.f-chip{font-size:10px;font-weight:600;padding:3px 9px;border-radius:99px;background:rgba(0,0,0,.12);color:rgba(255,255,255,.88)}
+.f-open{font-size:11px;font-weight:500;color:rgba(0,0,0,.5);display:inline-flex;align-items:center;gap:5px}
+.f-deco{display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;flex-shrink:0;min-width:52px;height:84px}
+/* sticker: dark overlay */
+.f-sticker{background:rgba(0,0,0,.18);border-radius:5px;padding:3px 8px;font-size:9px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.1em;text-transform:uppercase}
+.f-hw{font-family:'Caveat',cursive;font-size:12px;color:rgba(0,0,0,.36);transform:rotate(-3deg);display:inline-block;white-space:nowrap}
+.folded{position:absolute;bottom:0;right:0;width:0;height:0;border-style:solid;border-width:0 0 22px 22px;border-color:transparent transparent rgba(0,0,0,.1) transparent}
+.sticky{position:absolute;background:#F7E96A;border-radius:3px;padding:5px 8px;font-family:'Caveat',cursive;font-size:11px;color:#5A4A10;transform:rotate(-2deg);z-index:2;box-shadow:2px 2px 6px rgba(0,0,0,.1);line-height:1.3}
+.bottom-strip{display:flex;justify-content:space-between;align-items:flex-end;margin-top:1.75rem;padding-top:1.25rem;border-top:1.5px solid var(--border)}
+.bc-label{display:flex;align-items:center;gap:8px;background:#1A2C2B;border-radius:7px;padding:6px 12px}
+.bc-bars{display:flex;gap:1.5px;align-items:flex-end;height:18px}
+.bc-bar{background:rgba(255,255,255,.85);display:inline-block}
+.bc-text{font-size:9px;font-weight:700;color:rgba(255,255,255,.75);letter-spacing:.08em}
+.b-hint{font-family:'Caveat',cursive;font-size:16px;color:var(--text-mute)}
+.b-meta{text-align:right;font-size:9px;color:var(--text-mute);letter-spacing:.05em;line-height:1.8}
+.tdot{display:inline-block;width:5px;height:5px;background:var(--teal);border-radius:99px;margin-right:3px;vertical-align:middle}
+/* MODAL */
+.modal-overlay{display:none;position:absolute;inset:0;border-radius:24px;background:rgba(15,30,28,.72);z-index:100;align-items:center;justify-content:center;padding:1.5rem}
+.modal-overlay.open{display:flex}
+.modal{background:#F8F4EE;border-radius:16px;width:100%;max-width:540px;border:1px solid rgba(200,190,170,.4);overflow:hidden;animation:mPop .28s cubic-bezier(.34,1.3,.64,1);box-shadow:0 20px 60px rgba(0,0,0,.25)}
+@keyframes mPop{from{transform:scale(.9) translateY(14px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.m-header{padding:1.25rem 1.5rem 1rem;border-bottom:1px solid rgba(180,168,148,.25);display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.m-header-l{display:flex;align-items:center;gap:12px}
+.m-pkg-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.m-pkg-icon img{width:100%;height:100%;object-fit:cover}
+.mig{background:#C5DCC2;color:#2A5820;font-size:22px}
+.mir{background:#DCC5C5;color:#5A2828;font-size:22px}
+.mib{background:#C5D3DC;color:#284858;font-size:22px}
+.m-eyebrow{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#9A8C78;margin-bottom:4px;font-weight:600}
+.m-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#2C2820}
+.m-x{width:30px;height:30px;background:rgba(180,170,150,.2);border:1px solid rgba(180,170,150,.3);border-radius:99px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#7A6E60;font-size:15px;flex-shrink:0}
+.m-x:hover{background:rgba(180,170,150,.38);color:#2C2820}
+.m-body{padding:1.25rem 1.5rem;max-height:52vh;overflow-y:auto}
+.m-desc{font-size:13px;color:#6B5E4E;line-height:1.7;margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px dashed rgba(180,170,150,.4)}
+.m-sec{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A89880;font-weight:600;margin-bottom:.625rem}
+.m-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.25rem}
+.mpill{font-size:11px;font-weight:500;padding:4px 12px;border-radius:99px}
+.mpg{background:#C5DCC2;color:#1A3016}.mpr{background:#DCC5C5;color:#3A1616}.mpb{background:#C5D3DC;color:#162030}
+.m-prod-list{display:flex;flex-direction:column;gap:0;margin-bottom:1.25rem}
+.m-prod-row{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px dashed rgba(180,170,150,.3)}
+.m-prod-row:last-child{border-bottom:none}
+.m-prod-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:#fff}
+.mpig2{background:#6A9862}.mpir2{background:#A87070}.mpib2{background:#6888A8}
+.m-prod-info{flex:1}
+.m-prod-name-row{display:flex;align-items:center;gap:6px;margin-bottom:3px;flex-wrap:wrap}
+.m-prod-nm{font-size:13px;font-weight:500;color:#2C2820}
+.m-prod-score{font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px}
+.scg{background:#C5DCC2;color:#1A3016}.scr{background:#DCC5C5;color:#3A1616}.scb{background:#C5D3DC;color:#162030}
+.m-prod-soon{font-size:9px;color:#B8A890;font-style:italic}
+.m-prod-d{font-size:12px;color:#8A7868;line-height:1.55;margin-bottom:5px}
+.m-prod-lk{font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:3px;text-decoration:none}
+.lkg{color:#3A6832}.lkr{color:#824040}.lkb{color:#385878}
+.m-prod-lk:hover{opacity:.75;text-decoration:underline}
+.m-ben-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.m-ben{display:flex;align-items:center;gap:7px;font-size:12px;color:#6B5A48;padding:9px 11px;border-radius:8px}
+.m-ben i{font-size:14px}
+.bng{background:#C5DCC2}.bng i{color:#2A5820}
+.bnr{background:#DCC5C5}.bnr i{color:#582828}
+.bnb{background:#C5D3DC}.bnb i{color:#284858}
+.m-foot{padding:1rem 1.5rem;border-top:1px solid rgba(180,170,150,.25);display:flex;gap:8px;background:rgba(240,234,224,.5)}
+.m-foot-cl{background:transparent;border:1px solid rgba(180,170,150,.35);padding:11px 18px;border-radius:10px;font-size:12px;color:#8A7868;cursor:pointer;font-family:'Inter',sans-serif}
+.m-foot-cl:hover{background:rgba(180,170,150,.18)}
+.m-foot-ch{flex:1;border:none;padding:11px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:#fff;display:flex;align-items:center;justify-content:center;gap:7px;transition:opacity .15s,transform .1s}
+.m-foot-ch:hover{opacity:.88;transform:translateY(-1px)}
+.chg{background:#4A7844;box-shadow:0 4px 14px rgba(74,120,68,.3)}
+.chr{background:#885050;box-shadow:0 4px 14px rgba(136,80,80,.3)}
+.chb{background:#486888;box-shadow:0 4px 14px rgba(72,104,136,.3)}
+</style>
+
+<div class="portal" id="portal">
+<div class="portal-bg"></div>
+<div class="portal-inner">
+
+<div class="brand-header">
+  <div class="brand-logo-wrap">
+    <div class="brand-logo-box">
+      <svg width="130" height="26" viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block">
+        <text x="0" y="22" font-family="Nunito,sans-serif" font-weight="900" font-size="24" fill="white" letter-spacing="-0.3">Link</text>
+        <text x="57" y="22" font-family="Nunito,sans-serif" font-weight="900" font-size="24" fill="white" letter-spacing="-0.3">IT</text>
+        <circle cx="112" cy="13" r="12" fill="white"/>
+        <text x="100" y="18" font-family="Nunito,sans-serif" font-weight="900" font-size="12" fill="#1A2C2B">360</text>
+      </svg>
+    </div>
+    <div class="brand-divider"></div>
+    <div class="brand-portal-label">Bundle Portal</div>
+  </div>
+  <div class="brand-right">
+    <div class="brand-sub">Three packages · One subscription</div>
+    <div class="brand-year">2025 – 2026</div>
+  </div>
+</div>
+
+<div class="teal-bar"></div>
+
+<div class="folders-stack">
+  <div class="folder-wrap f1" onclick="openModal('family')">
+    <div class="f-tab-row">
+      <div class="f-tab"><span class="f-tab-num">01</span><span class="f-tab-label">Family Plus</span></div>
+      <div style="flex:1"></div>
+      <div class="f-tag-pill" style="background:rgba(143,175,136,.5);color:#122010">Most Popular</div>
+    </div>
+    <div class="f-body">
+      <div class="f-body-texture"></div>
+      <div class="img-zone">
+        <div class="img-shadow"></div>
+        <div class="img-main"><img id="fi-family" alt="Family Plus"/></div>
+      </div>
+      <div class="f-content">
+        <div class="f-pkg-name">Family Plus</div>
+        <div class="f-pkg-sub">For parents, kids &amp; family bonding</div>
+        <div class="f-chips"><span class="f-chip">LullaDream</span><span class="f-chip">BookSnap</span><span class="f-chip">Quizzy</span></div>
+        <div class="f-open"><i class="ti ti-folder-open" style="font-size:13px"></i> Open package details</div>
+      </div>
+      <div class="f-deco">
+        <svg width="18" height="34" viewBox="0 0 20 40" fill="none"><path d="M10 2C6.134 2 3 5.134 3 9v20c0 5.523 3.134 9 7 9s7-3.477 7-9V9c0-3.866-3.134-7-7-7z" stroke="rgba(80,110,80,.7)" stroke-width="2.2" fill="none"/><path d="M10 6C7.8 6 6 7.8 6 10v18c0 2.761 1.8 5 4 5s4-2.239 4-5V10c0-2.2-1.8-4-4-4z" stroke="rgba(80,110,80,.7)" stroke-width="1.8" fill="none"/></svg>
+        <div class="f-hw">for families</div>
+        <div class="f-sticker">FAM+</div>
+      </div>
+      <div class="folded"></div>
+      <div class="sticky" style="right:58px;bottom:10px">Best<br>seller!</div>
+    </div>
+  </div>
+
+  <div class="folder-wrap f2" onclick="openModal('growth')">
+    <div class="f-tab-row">
+      <div style="flex:1"></div>
+      <div class="f-tab"><span class="f-tab-num">02</span><span class="f-tab-label">Growth Plus</span></div>
+      <div style="width:6px"></div>
+    </div>
+    <div class="f-body">
+      <div class="f-body-texture"></div>
+      <div class="img-zone">
+        <div class="img-shadow"></div>
+        <div class="img-main"><img id="fi-growth" alt="Growth Plus"/></div>
+      </div>
+      <div class="f-content">
+        <div class="f-pkg-name">Growth Plus</div>
+        <div class="f-pkg-sub">For wellness &amp; self-improvement</div>
+        <div class="f-chips"><span class="f-chip">LifeFit</span><span class="f-chip">SpeakEasy</span><span class="f-chip">BookSnap</span></div>
+        <div class="f-open"><i class="ti ti-folder-open" style="font-size:13px"></i> Open package details</div>
+      </div>
+      <div class="f-deco">
+        <svg width="26" height="30" viewBox="0 0 32 36" fill="none"><rect x="2" y="14" width="28" height="20" rx="2" fill="rgba(130,80,80,.5)"/><rect x="8" y="12" width="16" height="8" rx="1.5" fill="none" stroke="rgba(130,80,80,.55)" stroke-width="2"/><path d="M13 3C13 3 10 3 10 7L10 13" stroke="rgba(130,80,80,.6)" stroke-width="2.5" stroke-linecap="round" fill="none"/><path d="M19 3C19 3 22 3 22 7L22 13" stroke="rgba(130,80,80,.6)" stroke-width="2.5" stroke-linecap="round" fill="none"/><circle cx="16" cy="8" r="3" fill="rgba(140,100,100,.4)"/></svg>
+        <div class="f-hw">grow daily</div>
+        <div class="f-sticker">GRW+</div>
+      </div>
+      <div class="folded"></div>
+    </div>
+  </div>
+
+  <div class="folder-wrap f3" onclick="openModal('learning')">
+    <div class="f-tab-row">
+      <div class="f-tab"><span class="f-tab-num">03</span><span class="f-tab-label">Learning Plus</span></div>
+      <div style="flex:1"></div>
+    </div>
+    <div class="f-body">
+      <div class="f-body-texture"></div>
+      <div class="img-zone">
+        <div class="img-shadow"></div>
+        <div class="img-main"><img id="fi-learning" alt="Learning Plus"/></div>
+      </div>
+      <div class="f-content">
+        <div class="f-pkg-name">Learning Plus</div>
+        <div class="f-pkg-sub">For students &amp; knowledge seekers</div>
+        <div class="f-chips"><span class="f-chip">SpeakEasy</span><span class="f-chip">Quizzy</span><span class="f-chip">BookSnap</span></div>
+        <div class="f-open"><i class="ti ti-folder-open" style="font-size:13px"></i> Open package details</div>
+      </div>
+      <div class="f-deco">
+        <svg width="18" height="34" viewBox="0 0 20 40" fill="none"><path d="M10 2C6.134 2 3 5.134 3 9v20c0 5.523 3.134 9 7 9s7-3.477 7-9V9c0-3.866-3.134-7-7-7z" stroke="rgba(60,90,120,.7)" stroke-width="2.2" fill="none"/><path d="M10 6C7.8 6 6 7.8 6 10v18c0 2.761 1.8 5 4 5s4-2.239 4-5V10c0-2.2-1.8-4-4-4z" stroke="rgba(60,90,120,.7)" stroke-width="1.8" fill="none"/></svg>
+        <div class="f-hw">keep learning</div>
+        <div class="f-sticker">LRN+</div>
+      </div>
+      <div class="folded"></div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-strip">
+  <div style="display:flex;flex-direction:column;gap:7px">
+    <div class="bc-label">
+      <div class="bc-bars"><span class="bc-bar" style="height:18px;width:2px"></span><span class="bc-bar" style="height:12px;width:1.5px"></span><span class="bc-bar" style="height:18px;width:2px"></span><span class="bc-bar" style="height:9px;width:1px"></span><span class="bc-bar" style="height:18px;width:2.5px"></span><span class="bc-bar" style="height:13px;width:1.5px"></span><span class="bc-bar" style="height:18px;width:2px"></span><span class="bc-bar" style="height:10px;width:1px"></span><span class="bc-bar" style="height:18px;width:2px"></span><span class="bc-bar" style="height:14px;width:1.5px"></span><span class="bc-bar" style="height:18px;width:2px"></span></div>
+      <span class="bc-text">LINKIT360 · PKG-2025</span>
+    </div>
+    <div class="b-hint">Click a folder to explore</div>
+  </div>
+  <div class="b-meta"><span class="tdot"></span>FAMILY PLUS · GROWTH PLUS · LEARNING PLUS<br><span style="color:#C8DFDD">BUNDLE PORTAL · 2025–2026</span></div>
+</div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="handleBD(event)">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="m-header">
+      <div class="m-header-l">
+        <div class="m-pkg-icon" id="mIcon"></div>
+        <div><div class="m-eyebrow" id="mEy"></div><div class="m-title" id="mTtl"></div></div>
+      </div>
+      <button class="m-x" onclick="closeModal()" aria-label="Close"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="m-body">
+      <div class="m-desc" id="mDesc"></div>
+      <div class="m-sec">Best for</div>
+      <div class="m-pills" id="mPills"></div>
+      <div class="m-sec">Included products</div>
+      <div class="m-prod-list" id="mProds"></div>
+      <div class="m-sec">What you get</div>
+      <div class="m-ben-grid" id="mBens"></div>
+    </div>
+    <div class="m-foot">
+      <button class="m-foot-cl" onclick="closeModal()">Close</button>
+      <button class="m-foot-ch" id="mCh"><i class="ti ti-bolt"></i> <span id="mChLbl"></span></button>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+async function loadImgs(){
+  const map={
+    family:'/mnt/user-data/uploads/ChatGPT_Image_Jun_18__2026__09_36_29_AM__1_.png',
+    growth:'/mnt/user-data/uploads/ChatGPT_Image_Jun_18__2026__09_36_30_AM__2_.png',
+    learning:'/mnt/user-data/uploads/ChatGPT_Image_Jun_18__2026__09_36_30_AM__3_.png'
+  };
+  const IMGS={};
+  for(const[k,v] of Object.entries(map)){
+    try{
+      const r=await fetch(v);
+      const blob=await r.blob();
+      IMGS[k]=URL.createObjectURL(blob);
+      document.getElementById('fi-'+k).src=IMGS[k];
+    }catch(e){
+      const icons={family:'ti-users',growth:'ti-trending-up',learning:'ti-school'};
+      document.getElementById('fi-'+k).outerHTML=`<i class="ti ${icons[k]}" style="font-size:28px;color:rgba(255,255,255,.5)"></i>`;
+    }
+  }
+  window._IMGS=IMGS;
+}
+loadImgs();
+
+const D={
+  family:{ey:'Package 01 · Family Plus',ttl:'Family Plus',icClass:'mig',icIcon:'ti-users',pillC:'mpg',prodC:'mpig2',scC:'scg',benC:'bng',lkC:'lkg',chC:'chg',
+    desc:'Family Plus brings together three AI-powered apps that serve every member of your household — from bedtime stories for kids to books and learning games. One subscription, the whole family covered.',
+    pills:['Parents','Kids','Family bonding','Light education'],
+    prods:[
+      {icon:'ti-moon',nm:'LullaDream',sc:'8.4/10',d:'An AI bedtime story app creating personalized sleep stories for kids using calming narration and optional parent voice features.',lk:'https://lulladream.ai',ll:'lulladream.ai'},
+      {icon:'ti-book',nm:'BookSnap',sc:'8.2/10',d:'An AI book summary tool helping users quickly understand key insights from books — ideal for parents who want to keep reading.',lk:'https://booksnap.ai',ll:'booksnap.ai'},
+      {icon:'ti-bulb',nm:'Quizzy',sc:null,d:'A gamified quiz app that turns learning into play. Adaptive questions keep kids engaged while building real knowledge.',lk:null,ll:null}
+    ],
+    bens:['3 apps, one subscription','Content for all ages','Family-safe experience','Premium features unlocked']},
+  growth:{ey:'Package 02 · Growth Plus',ttl:'Growth Plus',icClass:'mir',icIcon:'ti-trending-up',pillC:'mpr',prodC:'mpir2',scC:'scr',benC:'bnr',lkC:'lkr',chC:'chr',
+    desc:'Growth Plus is for people actively investing in themselves. Fitness, language, and reading — three tools that work together as one powerful daily self-improvement habit.',
+    pills:['Self-improvement','Wellness','Language learning','Avid readers'],
+    prods:[
+      {icon:'ti-run',nm:'LifeFit',sc:null,d:'An AI-powered fitness and wellness companion delivering personalized workouts, nutrition guidance, and mindfulness exercises adapted to your goals.',lk:null,ll:null},
+      {icon:'ti-language',nm:'SpeakEasy',sc:'8.5/10',d:'An AI language learning app focused on real speaking practice — improving vocabulary, fluency, and communication through real-world scenarios.',lk:'https://speakeasy.mobi',ll:'speakeasy.mobi'},
+      {icon:'ti-book',nm:'BookSnap',sc:'8.2/10',d:'An AI book summary tool condensing any book into key ideas — ideal for busy people who want to keep learning.',lk:'https://booksnap.ai',ll:'booksnap.ai'}
+    ],
+    bens:['3 apps, one subscription','AI-personalized for you','Wellness + language + reading','Premium features unlocked']},
+  learning:{ey:'Package 03 · Learning Plus',ttl:'Learning Plus',icClass:'mib',icIcon:'ti-school',pillC:'mpb',prodC:'mpib2',scC:'scb',benC:'bnb',lkC:'lkb',chC:'chb',
+    desc:'Learning Plus is for students and curious minds who want to grow every day. Language fluency, knowledge testing, and rapid reading — a complete daily learning habit in one subscription.',
+    pills:['Students','Lifelong learners','Knowledge seekers','Educators'],
+    prods:[
+      {icon:'ti-language',nm:'SpeakEasy',sc:'8.5/10',d:'An AI language learning app building real fluency through speaking practice, vocabulary building, and practical communication scenarios.',lk:'https://speakeasy.mobi',ll:'speakeasy.mobi'},
+      {icon:'ti-bulb',nm:'Quizzy',sc:null,d:'A gamified, adaptive quiz app for testing knowledge across subjects — perfect for exam prep or staying sharp.',lk:null,ll:null},
+      {icon:'ti-book',nm:'BookSnap',sc:'8.2/10',d:'An AI book summary tool extracting key insights so you can absorb more knowledge without spending hours reading.',lk:'https://booksnap.ai',ll:'booksnap.ai'}
+    ],
+    bens:['3 apps, one subscription','Adaptive to your level','Language + quiz + reading','Premium features unlocked']}
+};
+function openModal(id){
+  const p=D[id];
+  document.getElementById('mEy').textContent=p.ey;
+  document.getElementById('mTtl').textContent=p.ttl;
+  const ico=document.getElementById('mIcon');
+  const imgSrc=window._IMGS&&window._IMGS[id];
+  if(imgSrc){
+    ico.innerHTML=`<img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover" alt="${p.ttl}"/>`;
+    ico.className='m-pkg-icon';
+  } else {
+    ico.className='m-pkg-icon '+p.icClass;
+    ico.innerHTML=`<i class="ti ${p.icIcon}"></i>`;
+  }
+  document.getElementById('mDesc').textContent=p.desc;
+  document.getElementById('mPills').innerHTML=p.pills.map(pl=>`<span class="mpill ${p.pillC}">${pl}</span>`).join('');
+  document.getElementById('mProds').innerHTML=p.prods.map(pr=>`
+    <div class="m-prod-row">
+      <div class="m-prod-icon ${p.prodC}"><i class="ti ${pr.icon}"></i></div>
+      <div class="m-prod-info">
+        <div class="m-prod-name-row">
+          <span class="m-prod-nm">${pr.nm}</span>
+          ${pr.sc?`<span class="m-prod-score ${p.scC}">${pr.sc}</span>`:`<span class="m-prod-soon">Coming soon</span>`}
+        </div>
+        <div class="m-prod-d">${pr.d}</div>
+        ${pr.lk?`<a href="${pr.lk}" class="m-prod-lk ${p.lkC}"><i class="ti ti-external-link" style="font-size:10px"></i> ${pr.ll}</a>`:''}
+      </div>
+    </div>`).join('');
+  document.getElementById('mBens').innerHTML=p.bens.map(b=>`<div class="m-ben ${p.benC}"><i class="ti ti-circle-check"></i>${b}</div>`).join('');
+  const btn=document.getElementById('mCh');
+  btn.className='m-foot-ch '+p.chC;
+  document.getElementById('mChLbl').textContent='Choose '+p.ttl;
+  btn.onclick=()=>{closeModal();if(window.sendPrompt)sendPrompt('I want to subscribe to '+p.ttl+'. Take me to the payment page.');};
+  document.getElementById('modalOverlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('open')}
+function handleBD(e){if(e.target===document.getElementById('modalOverlay'))closeModal()}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()})
+</script>
