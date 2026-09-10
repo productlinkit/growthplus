@@ -5,9 +5,9 @@ import {
 } from "lucide-react";
 import linkitLogo    from "../../imports/image.png";
 import growthImg     from "../../imports/ChatGPT_Image_Jun_18__2026__09_36_30_AM__2_.png";
-import logoSpeakEasy from "../../imports/image-6.png";
 import logoQuizPro   from "../../imports/logo-badge.png";
-import logoLifeFit   from "../../imports/image-7.png";
+import logoSpeakEasy from "../../imports/image-6.png";
+import logoCandy     from "../../imports/logo-candyjewels.png";
 
 // ─── Responsive hook ──────────────────────────────────────────────────────────
 function useBreakpoint() {
@@ -25,24 +25,24 @@ const GROWTH = {
   id: "growth",
   num: "GRW",
   label: "Growth Plus",
-  tagline: "For wellness & self-improvement",
+  tagline: "For learning, speaking & play",
   tag: null,
   sticker: "GRW+",
   hw: "grow daily",
-  chips: ["LifeFit", "SpeakEasy", "QuizPro"],
+  chips: ["QuizPro", "SpeakEasy", "Candy Jewels"],
   img: growthImg,
   tab: "#C49A00", tabText: "#1B3A6E",
   body: "#FFD23F",
   bodyText: "#1B3A6E", chipBg: "rgba(27,58,110,0.13)", chipText: "#1B3A6E",
   ey: "LinkIT360 · Growth Plus",
-  desc: "Growth Plus is for people actively investing in themselves. Fitness, language, and reading — three tools that work together as one powerful daily self-improvement habit.",
-  pills: ["Self-improvement", "Wellness", "Language learning", "Avid readers"],
+  desc: "Growth Plus brings together quiz practice, real speaking, and a colorful game into one playful daily learning habit.",
+  pills: ["Quiz practice", "Speaking practice", "Casual gaming", "Daily learning"],
   prods: [
-    { logo: logoLifeFit as string,   Icon: Lightbulb, nm: "LifeFit",   d: "AI fitness & wellness companion with personalized workouts and nutrition guidance.", lk: "https://demo.lifefit.mobi", ll: "demo.lifefit.mobi" },
+    { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://u9-mm.quizpro.mobi/", ll: "u9-mm.quizpro.mobi", removeBg: true },
     { logo: logoSpeakEasy as string, Icon: Lightbulb, nm: "SpeakEasy", d: "AI language app focused on real speaking practice and fluency.", lk: "https://speakeasy.mobi", ll: "speakeasy.mobi" },
-    { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro",   d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://u9-mm.quizpro.mobi/", ll: "u9-mm.quizpro.mobi", removeBg: true },
+    { logo: logoCandy as string,     Icon: Lightbulb, nm: "Candy Jewels", d: "A colorful match-three game for quick, playful breaks.", lk: "https://html5.inlogic.sk/candyjewels/", ll: "html5.inlogic.sk/candyjewels", fill: true },
   ],
-  bens: ["3 apps, one subscription", "AI-personalized for you", "Wellness + language + quiz", "Premium features unlocked"],
+  bens: ["3 apps, one subscription", "Learn through play", "Speaking + quiz + game", "Premium features unlocked"],
   pillColor: "#FFF3B0", pillText: "#5A4000", benColor: "#FFF3B0", btnBg: "#C49A00",
   hasSticky: false,
   HeroIcon: TrendingUp,
@@ -162,9 +162,14 @@ function Modal({ pkg, onClose, isMobile }: { pkg: Pkg | null; onClose: () => voi
               <div key={i} className="flex items-start gap-3 py-2.5" style={{ borderBottom: i < pkg.prods.length - 1 ? "1px dashed rgba(0,0,0,0.08)" : "none" }}>
                 {/* Product logo or icon fallback */}
                 <div className="rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
-                  style={{ width: 40, height: 40, background: pr.logo ? "#fff" : pkg.btnBg, border: pr.logo ? "1px solid rgba(0,0,0,0.07)" : "none", padding: pr.logo ? 5 : 0 }}>
+                  style={{
+                    width: 40, height: 40,
+                    background: (pr as any).fill ? "transparent" : pr.logo ? "#fff" : pkg.btnBg,
+                    border: pr.logo && !(pr as any).fill ? "1px solid rgba(0,0,0,0.07)" : "none",
+                    padding: pr.logo && !(pr as any).fill ? 5 : 0,
+                  }}>
                   {pr.logo
-                    ? <img src={pr.logo} alt={pr.nm} style={{ width: "100%", height: "100%", objectFit: "contain", mixBlendMode: (pr as any).removeBg ? "multiply" : "normal" }} />
+                    ? <img src={pr.logo} alt={pr.nm} style={{ width: "100%", height: "100%", objectFit: (pr as any).fill ? "cover" : "contain", mixBlendMode: (pr as any).removeBg ? "multiply" : "normal" }} />
                     : <pr.Icon size={18} color="#fff" />
                   }
                 </div>
@@ -236,7 +241,7 @@ export function BundlePortal() {
             </span>
           </h1>
           <p style={{ fontSize: isMobile ? 14 : 15, color: "#374151", lineHeight: 1.72, maxWidth: 480, margin: "0 auto" }}>
-            Fitness, language, and quiz — three AI-powered apps working together as your daily self-improvement habit.
+            Quiz practice, speaking, and games — three apps working together as your daily learning habit.
           </p>
         </motion.div>
       </div>
