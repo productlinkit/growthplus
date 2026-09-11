@@ -1,13 +1,14 @@
 import type { CSSProperties } from "react";
 import landscape from "../../assets/background/landscape-hd.webp"; // 2× AI-upscaled (EDSR) 1672×941 painting
 import portrait from "../../assets/background/portrait-hd.webp";   // 2× AI-upscaled (EDSR) 941×1672 painting
-import cloudA from "../../assets/background/cloud-a.webp";
-import cloudC from "../../assets/background/cloud-c.webp";
-import cloudD from "../../assets/background/cloud-d.webp";
-import cloudE from "../../assets/background/cloud-e.webp";
-import pcloudA from "../../assets/background/pcloud-a.webp";
-import pcloudB from "../../assets/background/pcloud-b.webp";
-import pcloudF from "../../assets/background/pcloud-f.webp";
+import landA from "../../assets/background/land-cloud-a.webp";
+import landB from "../../assets/background/land-cloud-b.webp";
+import landC from "../../assets/background/land-cloud-c.webp";
+import landD from "../../assets/background/land-cloud-d.webp";
+import portA from "../../assets/background/port-cloud-a.webp";
+import portB from "../../assets/background/port-cloud-b.webp";
+import portC from "../../assets/background/port-cloud-c.webp";
+import portD from "../../assets/background/port-cloud-d.webp";
 
 // ─── Scenes ───────────────────────────────────────────────────────────────────
 // Each scene is a painting plus where its living parts are, in the painting's own
@@ -15,29 +16,28 @@ import pcloudF from "../../assets/background/pcloud-f.webp";
 // Clouds: top / w in % of the painting; dur / delay in seconds (negative delay on use).
 type Box = { x: number; y: number; w: number; h: number };
 type Cloud = { src: string; top: number; w: number; dur: number; delay: number; flip?: boolean; op: number };
-type Scene = { img: string; W: number; H: number; anchorX: number; clouds: Cloud[]; sun: Box; fall: Box & { skew: number }; mist: Box; lake: Box };
+type Scene = { img: string; W: number; H: number; anchorX: number; clouds: Cloud[]; sun?: Box; fall: Box & { skew: number }; mist: Box; lake: Box };
 
 // Desktop: landscape painting, anchored at 88% so the waterfall on the right survives side cropping.
 const DESKTOP: Scene = {
   img: landscape, W: 1672, H: 941, anchorX: 88,
   clouds: [
-    { src: cloudC, top: 3, w: 12, dur: 150, delay: 20, op: 0.95 },
-    { src: cloudD, top: 20, w: 10, dur: 115, delay: 70, op: 0.9 },
-    { src: cloudC, top: 11, w: 9, dur: 185, delay: 120, flip: true, op: 0.85 },
-    { src: cloudD, top: 29, w: 13, dur: 140, delay: 35, flip: true, op: 0.8 },
-    { src: cloudA, top: 1, w: 26, dur: 240, delay: 160, op: 0.9 },
-    { src: cloudE, top: 6, w: 16, dur: 210, delay: 40, op: 0.9 },
-    { src: cloudE, top: 18, w: 11, dur: 170, delay: 130, flip: true, op: 0.8 },
-    { src: cloudA, top: 14, w: 18, dur: 260, delay: 60, flip: true, op: 0.75 },
-    { src: cloudC, top: 24, w: 7, dur: 120, delay: 95, op: 0.85 },
-    { src: cloudD, top: 8, w: 8, dur: 100, delay: 15, op: 0.9 },
-    { src: cloudE, top: 26, w: 9, dur: 150, delay: 5, op: 0.7 },
-    { src: cloudC, top: 0, w: 15, dur: 200, delay: 185, flip: true, op: 0.9 },
+    { src: landA, top: 4, w: 18, dur: 190, delay: 20, op: 0.95 },
+    { src: landB, top: 14, w: 11, dur: 140, delay: 70, op: 0.9 },
+    { src: portC, top: 24, w: 16, dur: 170, delay: 120, op: 0.9 },
+    { src: landC, top: 36, w: 10, dur: 120, delay: 35, op: 0.85 },
+    { src: portA, top: 8, w: 13, dur: 160, delay: 160, flip: true, op: 0.9 },
+    { src: landD, top: 30, w: 10, dur: 130, delay: 40, op: 0.85 },
+    { src: portB, top: 18, w: 13, dur: 175, delay: 95, flip: true, op: 0.85 },
+    { src: landA, top: 27, w: 14, dur: 210, delay: 140, flip: true, op: 0.8 },
+    { src: portD, top: 2, w: 9, dur: 110, delay: 15, op: 0.9 },
+    { src: landB, top: 40, w: 8, dur: 100, delay: 60, flip: true, op: 0.8 },
+    { src: landC, top: 11, w: 8, dur: 115, delay: 100, op: 0.85 },
+    { src: portC, top: 33, w: 12, dur: 185, delay: 185, flip: true, op: 0.8 },
   ],
-  sun: { x: -88, y: 122, w: 400, h: 400 },
-  fall: { x: 1582, y: 546, w: 44, h: 146, skew: -8.6 },
-  mist: { x: 1552, y: 672, w: 80, h: 36 },
-  lake: { x: 590, y: 645, w: 580, h: 150 },
+  fall: { x: 1584, y: 545, w: 40, h: 135, skew: -8.4 },
+  mist: { x: 1545, y: 657, w: 90, h: 36 },
+  lake: { x: 730, y: 648, w: 500, h: 150 }, // open water right of the lakeside house, so its roof never ripples
 };
 
 // Phones: portrait painting, anchored at 78% so the waterfall on the right edge stays on screen.
@@ -45,21 +45,20 @@ const DESKTOP: Scene = {
 const MOBILE: Scene = {
   img: portrait, W: 941, H: 1672, anchorX: 78,
   clouds: [
-    { src: pcloudA, top: 12, w: 20, dur: 60, delay: 10, op: 0.95 },
-    { src: pcloudB, top: 31, w: 22, dur: 70, delay: 30, op: 0.95 },
-    { src: pcloudF, top: 20, w: 28, dur: 85, delay: 55, op: 0.9 },
-    { src: cloudC, top: 4, w: 18, dur: 55, delay: 20, flip: true, op: 0.9 },
-    { src: cloudD, top: 26, w: 16, dur: 48, delay: 12, op: 0.85 },
-    { src: cloudE, top: 38, w: 24, dur: 80, delay: 40, op: 0.8 },
-    { src: pcloudA, top: 42, w: 16, dur: 65, delay: 62, flip: true, op: 0.85 },
-    { src: pcloudB, top: 8, w: 18, dur: 75, delay: 47, flip: true, op: 0.9 },
-    { src: cloudC, top: 16, w: 14, dur: 50, delay: 35, op: 0.85 },
-    { src: pcloudF, top: 35, w: 22, dur: 90, delay: 75, flip: true, op: 0.8 },
+    { src: portA, top: 8, w: 23, dur: 60, delay: 10, op: 0.95 },
+    { src: portB, top: 24, w: 23, dur: 70, delay: 30, op: 0.95 },
+    { src: landA, top: 15, w: 33, dur: 85, delay: 55, op: 0.9 },
+    { src: portC, top: 38, w: 29, dur: 75, delay: 20, flip: true, op: 0.9 },
+    { src: landB, top: 3, w: 19, dur: 55, delay: 12, op: 0.9 },
+    { src: portD, top: 31, w: 18, dur: 50, delay: 40, op: 0.85 },
+    { src: landC, top: 45, w: 18, dur: 58, delay: 62, flip: true, op: 0.85 },
+    { src: landD, top: 19, w: 18, dur: 52, delay: 47, flip: true, op: 0.9 },
+    { src: portA, top: 49, w: 17, dur: 65, delay: 35, flip: true, op: 0.8 },
+    { src: portB, top: 12, w: 16, dur: 62, delay: 75, op: 0.85 },
   ],
-  sun: { x: -82, y: 642, w: 340, h: 340 },
-  fall: { x: 865, y: 1102, w: 30, h: 100, skew: -7.6 },
-  mist: { x: 847, y: 1191, w: 50, h: 22 },
-  lake: { x: 440, y: 1198, w: 400, h: 110 }, // open water right of the lakeside house, so its roof never ripples
+  fall: { x: 872, y: 1100, w: 34, h: 100, skew: -9 },
+  mist: { x: 850, y: 1193, w: 60, h: 24 },
+  lake: { x: 450, y: 1195, w: 390, h: 110 }, // open water right of the lakeside houses
 };
 
 // Sparkles on the lake, in % of the lake box.
@@ -143,7 +142,7 @@ const place = (b: Box, s: Scene): CSSProperties => ({
 });
 
 // Fixed full-screen painting that feels alive: drifting clouds, a flowing waterfall,
-// rippling lake and a breathing sun — CSS transform/opacity animations plus one small SVG
+// rippling lake (and a breathing sun when the scene has one) — CSS transform/opacity animations plus one small SVG
 // displacement filter on the lake. Phones get the portrait painting, desktops the landscape.
 export function LivingBackground({ isMobile }: { isMobile: boolean }) {
   const s = isMobile ? MOBILE : DESKTOP;
@@ -174,10 +173,12 @@ export function LivingBackground({ isMobile }: { isMobile: boolean }) {
           </div>
         ))}
 
-        <div className="lb-sun" style={place(s.sun, s)}>
-          <div className="lb-sun-glow" />
-          <div className="lb-sun-rays" />
-        </div>
+        {s.sun && (
+          <div className="lb-sun" style={place(s.sun, s)}>
+            <div className="lb-sun-glow" />
+            <div className="lb-sun-rays" />
+          </div>
+        )}
 
         <div className="lb-fall" style={{ ...place(s.fall, s), transform: `skewX(${s.fall.skew}deg)` }}>
           <div className="lb-fall-inner">
