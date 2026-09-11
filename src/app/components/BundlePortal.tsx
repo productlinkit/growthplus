@@ -59,7 +59,6 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
     <motion.div
       onClick={onOpen}
       className="cursor-pointer w-full select-none overflow-visible"
-      style={{ filter: "drop-shadow(0 22px 26px rgba(10,16,32,0.45)) drop-shadow(0 6px 8px rgba(10,16,32,0.30))" }}
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
     >
@@ -227,7 +226,7 @@ export function BundlePortal() {
 
   return (
     <div style={{ fontFamily: "'Inter',sans-serif", minHeight: "100vh", position: "relative" }}>
-      <LivingBackground />
+      <LivingBackground isMobile={isMobile} />
 
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-40" style={{ padding: "28px 32px", pointerEvents: "none" }}>
@@ -239,7 +238,7 @@ export function BundlePortal() {
       </nav>
 
       {/* Hero */}
-      <div className="pt-24 pb-8 sm:pt-32 sm:pb-12 px-5 text-center" style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}>
+      <div className="pt-24 pb-14 sm:pt-32 sm:pb-24 px-5 text-center" style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
           <h1 style={{ fontFamily: "'Nunito',sans-serif", fontSize: isMobile ? 28 : isTablet ? 38 : 46, fontWeight: 900, color: "#1B3A6E", lineHeight: 1.18, marginBottom: 14, letterSpacing: "-0.02em" }}>
             Level Up with{" "}

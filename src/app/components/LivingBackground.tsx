@@ -1,30 +1,66 @@
 import type { CSSProperties } from "react";
-import landscape from "../../assets/background/landscape.jpg";
+import landscape from "../../assets/background/landscape-hd.webp"; // 2× AI-upscaled (EDSR) 1672×941 painting
+import portrait from "../../assets/background/portrait-hd.webp";   // 2× AI-upscaled (EDSR) 941×1672 painting
 import cloudA from "../../assets/background/cloud-a.webp";
 import cloudC from "../../assets/background/cloud-c.webp";
 import cloudD from "../../assets/background/cloud-d.webp";
 import cloudE from "../../assets/background/cloud-e.webp";
+import pcloudA from "../../assets/background/pcloud-a.webp";
+import pcloudB from "../../assets/background/pcloud-b.webp";
+import pcloudF from "../../assets/background/pcloud-f.webp";
 
-// The painting is 1672×941. The scene box always covers the viewport at that aspect ratio,
-// so every effect below is placed in % of the painting and stays glued to it at any size.
-const AR = 1672 / 941;
+// ─── Scenes ───────────────────────────────────────────────────────────────────
+// Each scene is a painting plus where its living parts are, in the painting's own
+// pixels (W×H = the original size; the HD files are exactly 2× so coordinates hold).
+// Clouds: top / w in % of the painting; dur / delay in seconds (negative delay on use).
+type Box = { x: number; y: number; w: number; h: number };
+type Cloud = { src: string; top: number; w: number; dur: number; delay: number; flip?: boolean; op: number };
+type Scene = { img: string; W: number; H: number; anchorX: number; clouds: Cloud[]; sun: Box; fall: Box & { skew: number }; mist: Box; lake: Box };
 
-// Cloud sprites cut from the painting's own sky, crossing it at different heights and speeds.
-// top / w in % of the painting; dur / delay in seconds (negative delay = already mid-way on load).
-const CLOUDS = [
-  { src: cloudC, top: 3, w: 12, dur: 150, delay: 20, flip: false, op: 0.95 },
-  { src: cloudD, top: 20, w: 10, dur: 115, delay: 70, flip: false, op: 0.9 },
-  { src: cloudC, top: 11, w: 9, dur: 185, delay: 120, flip: true, op: 0.85 },
-  { src: cloudD, top: 29, w: 13, dur: 140, delay: 35, flip: true, op: 0.8 },
-  { src: cloudA, top: 1, w: 26, dur: 240, delay: 160, flip: false, op: 0.9 },
-  { src: cloudE, top: 6, w: 16, dur: 210, delay: 40, flip: false, op: 0.9 },
-  { src: cloudE, top: 18, w: 11, dur: 170, delay: 130, flip: true, op: 0.8 },
-  { src: cloudA, top: 14, w: 18, dur: 260, delay: 60, flip: true, op: 0.75 },
-  { src: cloudC, top: 24, w: 7, dur: 120, delay: 95, flip: false, op: 0.85 },
-  { src: cloudD, top: 8, w: 8, dur: 100, delay: 15, flip: false, op: 0.9 },
-  { src: cloudE, top: 26, w: 9, dur: 150, delay: 5, flip: false, op: 0.7 },
-  { src: cloudC, top: 0, w: 15, dur: 200, delay: 185, flip: true, op: 0.9 },
-];
+// Desktop: landscape painting, anchored at 88% so the waterfall on the right survives side cropping.
+const DESKTOP: Scene = {
+  img: landscape, W: 1672, H: 941, anchorX: 88,
+  clouds: [
+    { src: cloudC, top: 3, w: 12, dur: 150, delay: 20, op: 0.95 },
+    { src: cloudD, top: 20, w: 10, dur: 115, delay: 70, op: 0.9 },
+    { src: cloudC, top: 11, w: 9, dur: 185, delay: 120, flip: true, op: 0.85 },
+    { src: cloudD, top: 29, w: 13, dur: 140, delay: 35, flip: true, op: 0.8 },
+    { src: cloudA, top: 1, w: 26, dur: 240, delay: 160, op: 0.9 },
+    { src: cloudE, top: 6, w: 16, dur: 210, delay: 40, op: 0.9 },
+    { src: cloudE, top: 18, w: 11, dur: 170, delay: 130, flip: true, op: 0.8 },
+    { src: cloudA, top: 14, w: 18, dur: 260, delay: 60, flip: true, op: 0.75 },
+    { src: cloudC, top: 24, w: 7, dur: 120, delay: 95, op: 0.85 },
+    { src: cloudD, top: 8, w: 8, dur: 100, delay: 15, op: 0.9 },
+    { src: cloudE, top: 26, w: 9, dur: 150, delay: 5, op: 0.7 },
+    { src: cloudC, top: 0, w: 15, dur: 200, delay: 185, flip: true, op: 0.9 },
+  ],
+  sun: { x: -88, y: 122, w: 400, h: 400 },
+  fall: { x: 1582, y: 546, w: 44, h: 146, skew: -8.6 },
+  mist: { x: 1552, y: 672, w: 80, h: 36 },
+  lake: { x: 590, y: 645, w: 580, h: 150 },
+};
+
+// Phones: portrait painting, anchored at 78% so the waterfall on the right edge stays on screen.
+// The scene is narrow, so clouds cross faster to read as moving.
+const MOBILE: Scene = {
+  img: portrait, W: 941, H: 1672, anchorX: 78,
+  clouds: [
+    { src: pcloudA, top: 12, w: 20, dur: 60, delay: 10, op: 0.95 },
+    { src: pcloudB, top: 31, w: 22, dur: 70, delay: 30, op: 0.95 },
+    { src: pcloudF, top: 20, w: 28, dur: 85, delay: 55, op: 0.9 },
+    { src: cloudC, top: 4, w: 18, dur: 55, delay: 20, flip: true, op: 0.9 },
+    { src: cloudD, top: 26, w: 16, dur: 48, delay: 12, op: 0.85 },
+    { src: cloudE, top: 38, w: 24, dur: 80, delay: 40, op: 0.8 },
+    { src: pcloudA, top: 42, w: 16, dur: 65, delay: 62, flip: true, op: 0.85 },
+    { src: pcloudB, top: 8, w: 18, dur: 75, delay: 47, flip: true, op: 0.9 },
+    { src: cloudC, top: 16, w: 14, dur: 50, delay: 35, op: 0.85 },
+    { src: pcloudF, top: 35, w: 22, dur: 90, delay: 75, flip: true, op: 0.8 },
+  ],
+  sun: { x: -82, y: 642, w: 340, h: 340 },
+  fall: { x: 865, y: 1102, w: 30, h: 100, skew: -7.6 },
+  mist: { x: 847, y: 1191, w: 50, h: 22 },
+  lake: { x: 440, y: 1198, w: 400, h: 110 }, // open water right of the lakeside house, so its roof never ripples
+};
 
 // Sparkles on the lake, in % of the lake box.
 const GLINTS = [
@@ -33,11 +69,7 @@ const GLINTS = [
 ];
 
 const CSS = `
-/* Anchor the painting at 88% horizontally so the waterfall stays on screen when a narrower
-   viewport crops the sides; phones can't fit both, so they keep the centre (castle + lake). */
-.lb-scene { position: absolute; left: 88%; top: 50%; transform: translate(-88%, -50%);
-  width: max(100vw, calc(100vh * ${AR})); height: max(100vh, calc(100vw / ${AR}));
-  background: url(${landscape}) center / 100% 100% no-repeat; overflow: hidden; }
+.lb-scene { position: absolute; top: 50%; overflow: hidden; }
 .lb-scene > * { position: absolute; pointer-events: none; }
 
 /* clouds */
@@ -52,7 +84,7 @@ const CSS = `
 
 /* waterfall: two streak layers falling at different speeds, skewed to follow the fall's lean,
    with every edge faded out (no hard box), plus mist at the base */
-.lb-fall { overflow: hidden; mix-blend-mode: screen; opacity: 0.6; transform: skewX(-8.6deg);
+.lb-fall { overflow: hidden; mix-blend-mode: screen; opacity: 0.6;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 28%, #000 72%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0%, #000 28%, #000 72%, transparent 100%); }
 .lb-fall-inner { position: absolute; inset: 0; overflow: hidden;
@@ -70,11 +102,12 @@ const CSS = `
   filter: blur(4px); animation: lb-mist 3.4s ease-in-out infinite alternate; }
 @keyframes lb-mist { from { transform: scale(0.85); opacity: 0.45; } to { transform: scale(1.2); opacity: 0.85; } }
 
-/* lake: soft light glints drifting slowly in two directions, plus twinkling sparkles */
+/* lake: a copy of the lake area run through an animated SVG displacement filter (real
+   wobbling water), with soft glints drifting in two directions and twinkling sparkles */
 .lb-lake { -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 72%);
   mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 72%); overflow: hidden; }
 .lb-lake-warp { position: absolute; inset: 0; overflow: hidden; filter: url(#lb-water); }
-.lb-lake-img { position: absolute; background: url(${landscape}) center / 100% 100% no-repeat; }
+.lb-lake-img { position: absolute; background-position: center; background-size: 100% 100%; background-repeat: no-repeat; }
 .lb-ripple { position: absolute; top: 0; bottom: 0; mix-blend-mode: screen; will-change: transform; }
 .lb-ripple-a { left: -160px; right: 0; opacity: 0.9; animation: lb-drift-a 9s linear infinite;
   background-image:
@@ -102,13 +135,20 @@ const CSS = `
 @keyframes lb-pulse { from { opacity: 0.55; transform: scale(0.94); } to { opacity: 1; transform: scale(1.08); } }
 @keyframes lb-spin { to { transform: rotate(360deg); } }
 
-@media (max-width: 639px) { .lb-scene { left: 50%; transform: translate(-50%, -50%); } }
 @media (prefers-reduced-motion: reduce) { .lb-scene * { animation: none !important; } .lb-glint { opacity: 0; } }`;
+
+// Place a box given in painting pixels as % of the painting.
+const place = (b: Box, s: Scene): CSSProperties => ({
+  left: `${(b.x / s.W) * 100}%`, top: `${(b.y / s.H) * 100}%`, width: `${(b.w / s.W) * 100}%`, height: `${(b.h / s.H) * 100}%`,
+});
 
 // Fixed full-screen painting that feels alive: drifting clouds, a flowing waterfall,
 // rippling lake and a breathing sun — CSS transform/opacity animations plus one small SVG
-// displacement filter on the lake.
-export function LivingBackground() {
+// displacement filter on the lake. Phones get the portrait painting, desktops the landscape.
+export function LivingBackground({ isMobile }: { isMobile: boolean }) {
+  const s = isMobile ? MOBILE : DESKTOP;
+  const ar = s.W / s.H;
+  const { lake } = s;
   return (
     <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden", background: "#8FB4DE" }}>
       <style>{CSS}</style>
@@ -120,29 +160,40 @@ export function LivingBackground() {
           <feDisplacementMap in="SourceGraphic" in2="noise" scale={24} xChannelSelector="R" yChannelSelector="G" />
         </filter>
       </svg>
-      <div className="lb-scene">
-        {CLOUDS.map((c, i) => (
+
+      {/* The scene box always covers the viewport at the painting's aspect ratio, anchored so the
+          chosen point of the painting stays on screen; everything inside is placed in % of it. */}
+      <div className="lb-scene" style={{
+        left: `${s.anchorX}%`, transform: `translate(-${s.anchorX}%, -50%)`,
+        width: `max(100vw, calc(100vh * ${ar}))`, height: `max(100vh, calc(100vw / ${ar}))`,
+        background: `url(${s.img}) center / 100% 100% no-repeat`,
+      }}>
+        {s.clouds.map((c, i) => (
           <div key={i} className="lb-cloud-track" style={{ top: `${c.top}%`, "--dur": `${c.dur}s`, "--delay": `-${c.delay}s`, "--from": `-${c.w}%`, "--op": c.op } as CSSProperties}>
             <img src={c.src} alt="" style={{ width: `${c.w}%`, transform: c.flip ? "scaleX(-1)" : undefined }} />
           </div>
         ))}
 
-        <div className="lb-sun" style={{ left: "-5.26%", top: "12.96%", width: "23.92%", height: "42.5%" }}>
+        <div className="lb-sun" style={place(s.sun, s)}>
           <div className="lb-sun-glow" />
           <div className="lb-sun-rays" />
         </div>
 
-        <div className="lb-fall" style={{ left: "94.62%", top: "58.02%", width: "2.63%", height: "15.52%" }}>
+        <div className="lb-fall" style={{ ...place(s.fall, s), transform: `skewX(${s.fall.skew}deg)` }}>
           <div className="lb-fall-inner">
             <div className="lb-stream lb-stream-a" />
             <div className="lb-stream lb-stream-b" />
           </div>
         </div>
-        <div className="lb-mist" style={{ left: "92.82%", top: "71.41%", width: "4.78%", height: "3.83%" }} />
+        <div className="lb-mist" style={place(s.mist, s)} />
 
-        <div className="lb-lake" style={{ left: "35.29%", top: "68.54%", width: "34.69%", height: "15.94%" }}>
+        <div className="lb-lake" style={place(lake, s)}>
           <div className="lb-lake-warp">
-            <div className="lb-lake-img" style={{ left: "-101.72%", top: "-430%", width: "288.28%", height: "627.33%" }} />
+            {/* the whole painting, offset so the visible window lines up exactly with the lake box */}
+            <div className="lb-lake-img" style={{
+              left: `${(-lake.x / lake.w) * 100}%`, top: `${(-lake.y / lake.h) * 100}%`,
+              width: `${(s.W / lake.w) * 100}%`, height: `${(s.H / lake.h) * 100}%`, backgroundImage: `url(${s.img})`,
+            }} />
           </div>
           <div className="lb-ripple lb-ripple-a" />
           <div className="lb-ripple lb-ripple-b" />
