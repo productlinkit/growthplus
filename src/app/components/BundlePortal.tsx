@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import {
-  Lightbulb, FolderOpen, Check, ExternalLink, Zap, X, TrendingUp,
+  Lightbulb, FolderOpen, Check, ExternalLink, X, TrendingUp, Gamepad2,
 } from "lucide-react";
 import linkitLogo    from "../../imports/image.png";
 import growthImg     from "../../imports/ChatGPT_Image_Jun_18__2026__09_36_30_AM__2_.png";
 import logoQuizPro   from "../../imports/logo-badge.png";
 import logoSpeakEasy from "../../imports/image-6.png";
 import logoCandy     from "../../imports/logo-candyjewels.png";
+import { FloatingAssets } from "./FloatingAssets";
+import { PlayVerseCatalog } from "./PlayVerseCatalog";
+import { PLAYVERSE_GAMES } from "../data/playverse";
 
 // ─── Responsive hook ──────────────────────────────────────────────────────────
 function useBreakpoint() {
@@ -21,34 +24,34 @@ function useBreakpoint() {
 }
 
 // ─── Package data ─────────────────────────────────────────────────────────────
-const GROWTH = {
-  id: "growth",
-  num: "GRW",
-  label: "Growth Plus",
+const SMART_PLAY = {
+  id: "smart-play",
+  num: "SMP",
+  label: "Smart Play",
   tagline: "For learning, speaking & play",
   tag: null,
-  sticker: "GRW+",
+  sticker: "SMP+",
   hw: "grow daily",
-  chips: ["QuizPro", "SpeakEasy", "Candy Jewels"],
+  chips: ["QuizPro", "SpeakEasy", "PlayVerse"],
   img: growthImg,
   tab: "#C49A00", tabText: "#1B3A6E",
   body: "#FFD23F",
   bodyText: "#1B3A6E", chipBg: "rgba(27,58,110,0.13)", chipText: "#1B3A6E",
-  ey: "LinkIT360 · Growth Plus",
-  desc: "Growth Plus brings together quiz practice, real speaking, and a colorful game into one playful daily learning habit.",
+  ey: "LinkIT360 · Smart Play",
+  desc: "Smart Play brings together quiz practice, real speaking, and a colorful game into one playful daily learning habit.",
   pills: ["Quiz practice", "Speaking practice", "Casual gaming", "Daily learning"],
   prods: [
     { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://mm.quizpro.mobi", ll: "mm.quizpro.mobi", removeBg: true },
     { logo: logoSpeakEasy as string, Icon: Lightbulb, nm: "SpeakEasy", d: "AI language app focused on real speaking practice and fluency.", lk: "https://speakeasy.mobi", ll: "speakeasy.mobi" },
-    { logo: logoCandy as string,     Icon: Lightbulb, nm: "Candy Jewels", d: "A colorful match-three game for quick, playful breaks.", lk: "https://html5.inlogic.sk/candyjewels/", ll: "html5.inlogic.sk/candyjewels", fill: true },
+    { logo: logoCandy as string,     Icon: Lightbulb, nm: "PlayVerse", d: `The Mega Combo catalogue — ${PLAYVERSE_GAMES.length} instant-play HTML5 games: puzzle, arcade, action, racing and more.`, lk: "", ll: `Browse ${PLAYVERSE_GAMES.length} games`, fill: true, catalog: true },
   ],
-  bens: ["3 apps, one subscription", "Learn through play", "Speaking + quiz + game", "Premium features unlocked"],
+  bens: ["3 apps, one subscription", "Learn through play", `${PLAYVERSE_GAMES.length} PlayVerse games`, "Premium features unlocked"],
   pillColor: "#FFF3B0", pillText: "#5A4000", benColor: "#FFF3B0", btnBg: "#C49A00",
   hasSticky: false,
   HeroIcon: TrendingUp,
 } as const;
 
-type Pkg = typeof GROWTH;
+type Pkg = typeof SMART_PLAY;
 
 // ─── Full-width folder card ────────────────────────────────────────────────────
 function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; isMobile: boolean }) {
@@ -118,7 +121,7 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
 }
 
 // ─── Modal ─────────────────────────────────────────────────────────────────────
-function Modal({ pkg, onClose, isMobile }: { pkg: Pkg | null; onClose: () => void; isMobile: boolean }) {
+function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onClose: () => void; onOpenCatalog: () => void; isMobile: boolean }) {
   if (!pkg) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6"
@@ -177,7 +180,13 @@ function Modal({ pkg, onClose, isMobile }: { pkg: Pkg | null; onClose: () => voi
                   <div className="mb-1">
                     <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{pr.nm}</span>
                   </div>
-                  <p style={{ fontSize: 12, color: "#4B5563", lineHeight: 1.55, marginBottom: pr.lk ? 5 : 0 }}>{pr.d}</p>
+                  <p style={{ fontSize: 12, color: "#4B5563", lineHeight: 1.55, marginBottom: pr.lk || (pr as any).catalog ? 5 : 0 }}>{pr.d}</p>
+                  {(pr as any).catalog && (
+                    <button onClick={onOpenCatalog} className="inline-flex items-center gap-1"
+                      style={{ fontSize: 11, fontWeight: 600, color: pkg.btnBg, background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>
+                      <Gamepad2 size={11} /> {pr.ll}
+                    </button>
+                  )}
                   {pr.lk && (
                     <a href={pr.lk} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1"
                       style={{ fontSize: 11, fontWeight: 500, color: pkg.btnBg, textDecoration: "none" }}>
@@ -200,13 +209,19 @@ function Modal({ pkg, onClose, isMobile }: { pkg: Pkg | null; onClose: () => voi
 
         {/* Footer */}
         <div className="flex gap-2 px-5 py-4 sm:px-8" style={{ borderTop: "1px solid rgba(0,0,0,0.08)", background: "#F9FAFB" }}>
-          <button onClick={onClose} style={{ background: "transparent", border: "1px solid rgba(0,0,0,0.15)", padding: "11px 16px", borderRadius: 10, fontSize: 12, color: "#374151", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>Close</button>
-          <button onClick={onClose}
-            style={{ flex: 1, border: "none", padding: 11, borderRadius: 10, fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "Inter,sans-serif", color: "#fff", background: pkg.btnBg, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            <Zap size={14} /> Choose {pkg.label}
-          </button>
+          <button onClick={onClose} style={{ flex: 1, background: "transparent", border: "1px solid rgba(0,0,0,0.15)", padding: "11px 16px", borderRadius: 10, fontSize: 12, color: "#374151", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>Close</button>
         </div>
       </motion.div>
+    </div>
+  );
+}
+
+// ─── Background ───────────────────────────────────────────────────────────────
+function GridBackground() {
+  return (
+    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "#FBF7EF" }}>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(27,58,110,0.10) 1.2px, transparent 1.2px)", backgroundSize: "22px 22px" }} />
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "55%", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,210,63,0.12) 0%, transparent 70%)" }} />
     </div>
   );
 }
@@ -215,13 +230,12 @@ function Modal({ pkg, onClose, isMobile }: { pkg: Pkg | null; onClose: () => voi
 export function BundlePortal() {
   const { isMobile, isTablet } = useBreakpoint();
   const [modalOpen, setModalOpen] = useState(false);
+  const [catalogOpen, setCatalogOpen] = useState(false);
 
   return (
     <div style={{ fontFamily: "'Inter',sans-serif", minHeight: "100vh", position: "relative" }}>
-      {/* Warm glow */}
-      <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "55%", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,210,63,0.08) 0%, transparent 70%)" }} />
-      </div>
+      <GridBackground />
+      <FloatingAssets isMobile={isMobile} />
 
       {/* Nav */}
       <nav className="fixed top-0 left-0 right-0 z-40" style={{ padding: "28px 32px" }}>
@@ -236,7 +250,7 @@ export function BundlePortal() {
           <h1 style={{ fontFamily: "'Nunito',sans-serif", fontSize: isMobile ? 28 : isTablet ? 38 : 46, fontWeight: 900, color: "#1B3A6E", lineHeight: 1.18, marginBottom: 14, letterSpacing: "-0.02em" }}>
             Level Up with{" "}
             <span style={{ color: "#1B3A6E", position: "relative", display: "inline-block" }}>
-              Growth Plus
+              Smart Play
               <span style={{ position: "absolute", bottom: -3, left: 0, right: 0, height: 3, borderRadius: 99, background: "#FFD23F" }} />
             </span>
           </h1>
@@ -255,11 +269,12 @@ export function BundlePortal() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <FolderFull pkg={GROWTH} onOpen={() => setModalOpen(true)} isMobile={isMobile} />
+          <FolderFull pkg={SMART_PLAY} onOpen={() => setModalOpen(true)} isMobile={isMobile} />
         </motion.div>
       </div>
 
-      {modalOpen && <Modal pkg={GROWTH} onClose={() => setModalOpen(false)} isMobile={isMobile} />}
+      {modalOpen && <Modal pkg={SMART_PLAY} onClose={() => setModalOpen(false)} onOpenCatalog={() => setCatalogOpen(true)} isMobile={isMobile} />}
+      {catalogOpen && <PlayVerseCatalog logo={logoCandy} onClose={() => setCatalogOpen(false)} isMobile={isMobile} />}
     </div>
   );
 }
