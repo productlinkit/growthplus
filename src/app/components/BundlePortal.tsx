@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   Lightbulb, FolderOpen, Check, ExternalLink, X, TrendingUp, Gamepad2,
 } from "lucide-react";
-import linkitLogo    from "../../imports/image.png";
+import linkitLogo    from "../../imports/logo-linkit360.png";
 import growthImg     from "../../imports/ChatGPT_Image_Jun_18__2026__09_36_30_AM__2_.png";
 import logoQuizPro   from "../../imports/logo-badge.png";
 import logoSpeakEasy from "../../imports/image-6.png";
 import logoCandy     from "../../imports/logo-candyjewels.png";
-import { FloatingAssets } from "./FloatingAssets";
+import { LivingBackground } from "./LivingBackground";
 import { PlayVerseCatalog } from "./PlayVerseCatalog";
 import { PLAYVERSE_GAMES } from "../data/playverse";
 
@@ -59,12 +59,13 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
     <motion.div
       onClick={onOpen}
       className="cursor-pointer w-full select-none overflow-visible"
+      style={{ filter: "drop-shadow(0 22px 26px rgba(10,16,32,0.45)) drop-shadow(0 6px 8px rgba(10,16,32,0.30))" }}
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 300, damping: 22 }}
     >
       <div className="flex items-end gap-1.5 px-1.5">
         <div className="h-7 rounded-t-lg inline-flex items-center gap-2 px-3.5"
-          style={{ background: pkg.tab, color: pkg.tabText, minWidth: isMobile ? 120 : 148 }}>
+          style={{ background: pkg.tab, color: pkg.tabText, minWidth: isMobile ? 120 : 148, boxShadow: "inset 0 1px 0 rgba(255,255,255,0.35)" }}>
           <span style={{ fontSize: 9, letterSpacing: "0.1em", opacity: 0.5, fontWeight: 700 }}>{pkg.num}</span>
           <span style={{ fontSize: isMobile ? 10 : 11, fontWeight: 700, letterSpacing: "0.09em", textTransform: "uppercase" }}>{pkg.label}</span>
         </div>
@@ -80,6 +81,7 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
         className="rounded-[2px_14px_14px_14px] relative overflow-hidden flex items-center"
         style={{
           background: pkg.body,
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -6px 0 rgba(120,80,0,0.18), inset 0 -18px 30px -18px rgba(120,80,0,0.25)",
           padding: isMobile ? "16px" : "20px 24px",
           gap: isMobile ? 14 : 20,
           minHeight: isMobile ? 100 : 110,
@@ -216,31 +218,23 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
   );
 }
 
-// ─── Background ───────────────────────────────────────────────────────────────
-function GridBackground() {
-  return (
-    <div aria-hidden style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", background: "#FBF7EF" }}>
-      <div style={{ position: "absolute", inset: 0, backgroundImage: "radial-gradient(rgba(27,58,110,0.10) 1.2px, transparent 1.2px)", backgroundSize: "22px 22px" }} />
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: "55%", background: "radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,210,63,0.12) 0%, transparent 70%)" }} />
-    </div>
-  );
-}
-
 // ─── Main export ──────────────────────────────────────────────────────────────
 export function BundlePortal() {
   const { isMobile, isTablet } = useBreakpoint();
   const [modalOpen, setModalOpen] = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   return (
     <div style={{ fontFamily: "'Inter',sans-serif", minHeight: "100vh", position: "relative" }}>
-      <GridBackground />
-      <FloatingAssets isMobile={isMobile} />
+      <LivingBackground />
 
       {/* Nav */}
-      <nav className="fixed top-0 left-0 right-0 z-40" style={{ padding: "28px 32px" }}>
-        <div className="max-w-5xl mx-auto">
-          <img src={linkitLogo} alt="LinkIT 360" style={{ height: 22, display: "block", filter: "invert(1)", mixBlendMode: "multiply" }} />
+      <nav className="fixed top-0 left-0 right-0 z-40" style={{ padding: "28px 32px", pointerEvents: "none" }}>
+        <div className="max-w-5xl mx-auto flex justify-center">
+          <div style={{ pointerEvents: "auto", display: "inline-flex", alignItems: "center", background: "#FCFCFB", borderRadius: 999, padding: isMobile ? "7px 14px" : "9px 18px", boxShadow: "0 6px 18px rgba(10,20,40,0.28)" }}>
+            <img src={linkitLogo} alt="LinkIT 360" style={{ height: isMobile ? 22 : 28, display: "block" }} />
+          </div>
         </div>
       </nav>
 
@@ -269,7 +263,19 @@ export function BundlePortal() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
         >
-          <FolderFull pkg={SMART_PLAY} onOpen={() => setModalOpen(true)} isMobile={isMobile} />
+          {/* excited idle hop: jump, land with a little squash, small rebound, settle — then again */}
+          <motion.div
+            style={{ transformOrigin: "50% 100%" }}
+            animate={reduceMotion ? undefined : {
+              y:      [0, -18, 0, -7, 0, 0],
+              rotate: [0, -1.4, 0.9, -0.5, 0, 0],
+              scaleY: [1, 1.02, 0.97, 1.01, 1, 1],
+            }}
+            transition={{ duration: 2.4, repeat: Infinity, delay: 0.8, times: [0, 0.2, 0.38, 0.52, 0.66, 1],
+              ease: ["easeOut", "easeIn", "easeOut", "easeIn", "linear"] }}
+          >
+            <FolderFull pkg={SMART_PLAY} onOpen={() => setModalOpen(true)} isMobile={isMobile} />
+          </motion.div>
         </motion.div>
       </div>
 
