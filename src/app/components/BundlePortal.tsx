@@ -38,7 +38,7 @@ const GROWTH = {
   desc: "Growth Plus brings together quiz practice, real speaking, and a colorful game into one playful daily learning habit.",
   pills: ["Quiz practice", "Speaking practice", "Casual gaming", "Daily learning"],
   prods: [
-    { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://u9-mm.quizpro.mobi/", ll: "u9-mm.quizpro.mobi", removeBg: true },
+    { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://mm.quizpro.mobi", ll: "mm.quizpro.mobi", removeBg: true },
     { logo: logoSpeakEasy as string, Icon: Lightbulb, nm: "SpeakEasy", d: "AI language app focused on real speaking practice and fluency.", lk: "https://speakeasy.mobi", ll: "speakeasy.mobi" },
     { logo: logoCandy as string,     Icon: Lightbulb, nm: "Candy Jewels", d: "A colorful match-three game for quick, playful breaks.", lk: "https://html5.inlogic.sk/candyjewels/", ll: "html5.inlogic.sk/candyjewels", fill: true },
   ],
