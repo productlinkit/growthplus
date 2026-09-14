@@ -4,10 +4,10 @@ import {
   Lightbulb, FolderOpen, Check, ExternalLink, X, TrendingUp, Gamepad2,
 } from "lucide-react";
 import linkitLogo    from "../../imports/logo-linkit360.png";
-import growthImg     from "../../imports/ChatGPT_Image_Jun_18__2026__09_36_30_AM__2_.png";
+import smartplayMark from "../../imports/smartplay-mark.png";
 import logoQuizPro   from "../../imports/logo-badge.png";
 import logoSpeakEasy from "../../imports/image-6.png";
-import logoCandy     from "../../imports/logo-candyjewels.png";
+import playverseMark from "../../imports/playverse-mark.png";
 import { LivingBackground } from "./LivingBackground";
 import { PlayVerseCatalog } from "./PlayVerseCatalog";
 import { PLAYVERSE_GAMES } from "../data/playverse";
@@ -33,7 +33,7 @@ const SMART_PLAY = {
   sticker: "SMP+",
   hw: "grow daily",
   chips: ["QuizPro", "SpeakEasy", "PlayVerse"],
-  img: growthImg,
+  img: smartplayMark,
   tab: "#C49A00", tabText: "#1B3A6E",
   body: "#FFD23F",
   bodyText: "#1B3A6E", chipBg: "rgba(27,58,110,0.13)", chipText: "#1B3A6E",
@@ -43,7 +43,7 @@ const SMART_PLAY = {
   prods: [
     { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://mm.quizpro.mobi", ll: "mm.quizpro.mobi", removeBg: true },
     { logo: logoSpeakEasy as string, Icon: Lightbulb, nm: "SpeakEasy", d: "AI language app focused on real speaking practice and fluency.", lk: "https://speakeasy.mobi", ll: "speakeasy.mobi" },
-    { logo: logoCandy as string,     Icon: Lightbulb, nm: "PlayVerse", d: `The Mega Combo catalogue — ${PLAYVERSE_GAMES.length} instant-play HTML5 games: puzzle, arcade, action, racing and more.`, lk: "", ll: `Browse ${PLAYVERSE_GAMES.length} games`, fill: true, catalog: true },
+    { logo: playverseMark as string, Icon: Lightbulb, nm: "PlayVerse", d: `The Mega Combo catalogue — ${PLAYVERSE_GAMES.length} instant-play HTML5 games: puzzle, arcade, action, racing and more.`, lk: "", ll: `Browse ${PLAYVERSE_GAMES.length} games`, fill: true, catalog: true },
   ],
   bens: ["3 apps, one subscription", "Learn through play", `${PLAYVERSE_GAMES.length} PlayVerse games`, "Premium features unlocked"],
   pillColor: "#FFF3B0", pillText: "#5A4000", benColor: "#FFF3B0", btnBg: "#C49A00",
@@ -279,7 +279,7 @@ export function BundlePortal() {
       </div>
 
       {modalOpen && <Modal pkg={SMART_PLAY} onClose={() => setModalOpen(false)} onOpenCatalog={() => setCatalogOpen(true)} isMobile={isMobile} />}
-      {catalogOpen && <PlayVerseCatalog logo={logoCandy} onClose={() => setCatalogOpen(false)} isMobile={isMobile} />}
+      {catalogOpen && <PlayVerseCatalog logo={playverseMark} onClose={() => setCatalogOpen(false)} isMobile={isMobile} />}
     </div>
   );
 }
