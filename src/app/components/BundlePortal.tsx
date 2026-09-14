@@ -11,6 +11,7 @@ import playverseMark from "../../imports/playverse-mark.png";
 import { LivingBackground } from "./LivingBackground";
 import { PlayVerseCatalog } from "./PlayVerseCatalog";
 import { PLAYVERSE_GAMES } from "../data/playverse";
+import { translate, initialLang, saveLang, type Lang } from "../i18n";
 
 // ─── Responsive hook ──────────────────────────────────────────────────────────
 function useBreakpoint() {
@@ -43,9 +44,9 @@ const SMART_PLAY = {
   prods: [
     { logo: logoQuizPro as string,   Icon: Lightbulb, nm: "QuizPro", d: "Gamified quiz app turning learning into play with adaptive questions.", lk: "https://mm.quizpro.mobi", ll: "mm.quizpro.mobi", removeBg: true },
     { logo: logoSpeakEasy as string, Icon: Lightbulb, nm: "SpeakEasy", d: "AI language app focused on real speaking practice and fluency.", lk: "https://speakeasy.mobi", ll: "speakeasy.mobi" },
-    { logo: playverseMark as string, Icon: Lightbulb, nm: "PlayVerse", d: `The Mega Combo catalogue — ${PLAYVERSE_GAMES.length} instant-play HTML5 games: puzzle, arcade, action, racing and more.`, lk: "", ll: `Browse ${PLAYVERSE_GAMES.length} games`, fill: true, catalog: true },
+    { logo: playverseMark as string, Icon: Lightbulb, nm: "PlayVerse", d: "The Mega Combo catalogue — {n} instant-play HTML5 games: puzzle, arcade, action, racing and more.", lk: "", ll: "Browse {n} games", fill: true, catalog: true },
   ],
-  bens: ["3 apps, one subscription", "Learn through play", `${PLAYVERSE_GAMES.length} PlayVerse games`, "Premium features unlocked"],
+  bens: ["3 apps, one subscription", "Learn through play", "{n} PlayVerse games", "Premium features unlocked"],
   pillColor: "#FFF3B0", pillText: "#5A4000", benColor: "#FFF3B0", btnBg: "#C49A00",
   hasSticky: false,
   HeroIcon: TrendingUp,
@@ -54,7 +55,9 @@ const SMART_PLAY = {
 type Pkg = typeof SMART_PLAY;
 
 // ─── Full-width folder card ────────────────────────────────────────────────────
-function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; isMobile: boolean }) {
+type T = (en: string) => string;
+
+function FolderFull({ pkg, onOpen, isMobile, t }: { pkg: Pkg; onOpen: () => void; isMobile: boolean; t: T }) {
   return (
     <motion.div
       onClick={onOpen}
@@ -95,24 +98,24 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
           </div>
         </div>
         <div className="flex-1 min-w-0">
-          <div style={{ fontFamily: "'Nunito',sans-serif", fontSize: isMobile ? 16 : 19, fontWeight: 900, color: pkg.bodyText, marginBottom: 2, lineHeight: 1.1 }}>{pkg.label}</div>
-          <div style={{ fontSize: isMobile ? 10 : 11, color: pkg.bodyText, opacity: 0.7, marginBottom: isMobile ? 8 : 12 }}>{pkg.tagline}</div>
+          <div style={{ fontFamily: "'Nunito','Noto Sans Myanmar',sans-serif", fontSize: isMobile ? 16 : 19, fontWeight: 900, color: pkg.bodyText, marginBottom: 2, lineHeight: 1.1 }}>{pkg.label}</div>
+          <div style={{ fontSize: isMobile ? 10 : 11, color: pkg.bodyText, opacity: 0.7, marginBottom: isMobile ? 8 : 12, lineHeight: 1.5 }}>{t(pkg.tagline)}</div>
           <div className="flex flex-wrap gap-1 mb-2.5">
             {pkg.chips.map(c => <span key={c} style={{ fontSize: 9, fontWeight: 600, padding: "2px 8px", borderRadius: 99, background: pkg.chipBg, color: pkg.chipText }}>{c}</span>)}
           </div>
           <div className="inline-flex items-center gap-1.5" style={{ fontSize: isMobile ? 10 : 11, fontWeight: 500, color: pkg.bodyText, opacity: 0.65 }}>
-            <FolderOpen size={12} /> Open package details
+            <FolderOpen size={12} /> {t("Open package details")}
           </div>
         </div>
         {!isMobile && (
           <div className="flex flex-col items-end justify-between shrink-0" style={{ minWidth: 52, height: 84 }}>
             <div style={{ background: "rgba(0,0,0,0.20)", borderRadius: 5, padding: "3px 8px", fontSize: 9, fontWeight: 700, color: pkg.bodyText, opacity: 0.85, letterSpacing: "0.1em", textTransform: "uppercase" }}>{pkg.sticker}</div>
-            <div style={{ fontFamily: "'Caveat',cursive", fontSize: 12, color: pkg.bodyText, opacity: 0.45, transform: "rotate(-3deg)", whiteSpace: "nowrap" }}>{pkg.hw}</div>
+            <div style={{ fontFamily: "'Caveat','Noto Sans Myanmar',cursive", fontSize: 12, color: pkg.bodyText, opacity: 0.45, transform: "rotate(-3deg)", whiteSpace: "nowrap" }}>{t(pkg.hw)}</div>
           </div>
         )}
         <div className="absolute bottom-0 right-0" style={{ width: 0, height: 0, borderStyle: "solid", borderWidth: "0 0 20px 20px", borderColor: "transparent transparent rgba(0,0,0,0.08) transparent" }} />
         {pkg.hasSticky && (
-          <div style={{ position: "absolute", right: isMobile ? 10 : 58, top: isMobile ? 10 : "auto", bottom: isMobile ? "auto" : 10, background: "#F7E96A", borderRadius: 3, padding: isMobile ? "3px 6px" : "5px 8px", fontFamily: "'Caveat',cursive", fontSize: isMobile ? 10 : 11, color: "#5A4A10", transform: isMobile ? "rotate(2deg)" : "rotate(-2deg)", zIndex: 2, boxShadow: "2px 2px 6px rgba(0,0,0,0.08)", lineHeight: 1.3 }}>
+          <div style={{ position: "absolute", right: isMobile ? 10 : 58, top: isMobile ? 10 : "auto", bottom: isMobile ? "auto" : 10, background: "#F7E96A", borderRadius: 3, padding: isMobile ? "3px 6px" : "5px 8px", fontFamily: "'Caveat','Noto Sans Myanmar',cursive", fontSize: isMobile ? 10 : 11, color: "#5A4A10", transform: isMobile ? "rotate(2deg)" : "rotate(-2deg)", zIndex: 2, boxShadow: "2px 2px 6px rgba(0,0,0,0.08)", lineHeight: 1.3 }}>
             {isMobile ? "Best seller!" : <><span>Best</span><br /><span>seller!</span></>}
           </div>
         )}
@@ -122,7 +125,7 @@ function FolderFull({ pkg, onOpen, isMobile }: { pkg: Pkg; onOpen: () => void; i
 }
 
 // ─── Modal ─────────────────────────────────────────────────────────────────────
-function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onClose: () => void; onOpenCatalog: () => void; isMobile: boolean }) {
+function Modal({ pkg, onClose, onOpenCatalog, isMobile, t }: { pkg: Pkg | null; onClose: () => void; onOpenCatalog: () => void; isMobile: boolean; t: T }) {
   if (!pkg) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6"
@@ -144,7 +147,7 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
             </div>
             <div>
               <div style={{ fontSize: 9, letterSpacing: "0.12em", textTransform: "uppercase", color: "#6B7280", marginBottom: 3, fontWeight: 600 }}>{pkg.ey}</div>
-              <div style={{ fontFamily: "'Nunito',sans-serif", fontSize: 18, fontWeight: 900, color: "#111827" }}>{pkg.label}</div>
+              <div style={{ fontFamily: "'Nunito','Noto Sans Myanmar',sans-serif", fontSize: 18, fontWeight: 900, color: "#111827" }}>{pkg.label}</div>
             </div>
           </div>
           <button onClick={onClose} className="flex items-center justify-center rounded-full shrink-0"
@@ -155,12 +158,12 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
 
         {/* Body */}
         <div className="px-5 py-4 sm:px-8 sm:py-6 overflow-y-auto" style={{ maxHeight: isMobile ? "60vh" : "58vh" }}>
-          <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.7, marginBottom: 18, paddingBottom: 18, borderBottom: "1px dashed rgba(0,0,0,0.10)" }}>{pkg.desc}</p>
-          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>Best for</div>
+          <p style={{ fontSize: 13, color: "#374151", lineHeight: 1.7, marginBottom: 18, paddingBottom: 18, borderBottom: "1px dashed rgba(0,0,0,0.10)" }}>{t(pkg.desc)}</p>
+          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>{t("Best for")}</div>
           <div className="flex flex-wrap gap-1.5 mb-4">
-            {pkg.pills.map(p => <span key={p} style={{ fontSize: 11, fontWeight: 500, padding: "4px 11px", borderRadius: 99, background: pkg.pillColor, color: pkg.pillText }}>{p}</span>)}
+            {pkg.pills.map(p => <span key={p} style={{ fontSize: 11, fontWeight: 500, padding: "4px 11px", borderRadius: 99, background: pkg.pillColor, color: pkg.pillText }}>{t(p)}</span>)}
           </div>
-          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>Included products</div>
+          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>{t("Included products")}</div>
           <div className="mb-4">
             {pkg.prods.map((pr, i) => (
               <div key={i} className="flex items-start gap-3 py-2.5" style={{ borderBottom: i < pkg.prods.length - 1 ? "1px dashed rgba(0,0,0,0.08)" : "none" }}>
@@ -181,11 +184,11 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
                   <div className="mb-1">
                     <span style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{pr.nm}</span>
                   </div>
-                  <p style={{ fontSize: 12, color: "#4B5563", lineHeight: 1.55, marginBottom: pr.lk || (pr as any).catalog ? 5 : 0 }}>{pr.d}</p>
+                  <p style={{ fontSize: 12, color: "#4B5563", lineHeight: 1.55, marginBottom: pr.lk || (pr as any).catalog ? 5 : 0 }}>{t(pr.d)}</p>
                   {(pr as any).catalog && (
                     <button onClick={onOpenCatalog} className="inline-flex items-center gap-1"
-                      style={{ fontSize: 11, fontWeight: 600, color: pkg.btnBg, background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "Inter,sans-serif" }}>
-                      <Gamepad2 size={11} /> {pr.ll}
+                      style={{ fontSize: 11, fontWeight: 600, color: pkg.btnBg, background: "none", border: "none", padding: 0, cursor: "pointer", fontFamily: "'Inter','Noto Sans Myanmar',sans-serif" }}>
+                      <Gamepad2 size={11} /> {t(pr.ll)}
                     </button>
                   )}
                   {pr.lk && (
@@ -198,11 +201,11 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
               </div>
             ))}
           </div>
-          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>What you get</div>
+          <div style={{ fontSize: 10, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6B7280", fontWeight: 600, marginBottom: 8 }}>{t("What you get")}</div>
           <div className="grid grid-cols-2 gap-2">
             {pkg.bens.map(b => (
               <div key={b} className="flex items-center gap-2 px-2.5 py-2 rounded-lg" style={{ background: pkg.benColor, fontSize: 12, color: "#111827" }}>
-                <Check size={13} color={pkg.btnBg} strokeWidth={2.5} /> {b}
+                <Check size={13} color={pkg.btnBg} strokeWidth={2.5} /> {t(b)}
               </div>
             ))}
           </div>
@@ -210,7 +213,7 @@ function Modal({ pkg, onClose, onOpenCatalog, isMobile }: { pkg: Pkg | null; onC
 
         {/* Footer */}
         <div className="flex gap-2 px-5 py-4 sm:px-8" style={{ borderTop: "1px solid rgba(0,0,0,0.08)", background: "#F9FAFB" }}>
-          <button onClick={onClose} style={{ flex: 1, background: "transparent", border: "1px solid rgba(0,0,0,0.15)", padding: "11px 16px", borderRadius: 10, fontSize: 12, color: "#374151", cursor: "pointer", fontFamily: "Inter,sans-serif" }}>Close</button>
+          <button onClick={onClose} style={{ flex: 1, background: "transparent", border: "1px solid rgba(0,0,0,0.15)", padding: "11px 16px", borderRadius: 10, fontSize: 12, color: "#374151", cursor: "pointer", fontFamily: "'Inter','Noto Sans Myanmar',sans-serif" }}>Close</button>
         </div>
       </motion.div>
     </div>
@@ -223,9 +226,14 @@ export function BundlePortal() {
   const [modalOpen, setModalOpen] = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const [lang, setLang] = useState<Lang>(initialLang);
+  useEffect(() => { saveLang(lang); document.documentElement.lang = lang; }, [lang]);
+  const t: T = en => translate(lang, en, { n: PLAYVERSE_GAMES.length });
+  // The hero title keeps "Smart Play" underlined wherever the language puts it in the sentence.
+  const [titleBefore, titleAfter] = t("Level Up with Smart Play").split("Smart Play");
 
   return (
-    <div style={{ fontFamily: "'Inter',sans-serif", minHeight: "100vh", position: "relative" }}>
+    <div style={{ fontFamily: "'Inter','Noto Sans Myanmar',sans-serif", minHeight: "100vh", position: "relative" }}>
       <LivingBackground isMobile={isMobile} />
 
       {/* Nav */}
@@ -235,20 +243,31 @@ export function BundlePortal() {
             <img src={linkitLogo} alt="LinkIT 360" style={{ height: isMobile ? 22 : 28, display: "block" }} />
           </div>
         </div>
+        {/* Language toggle */}
+        <div role="group" aria-label="Language" style={{ position: "absolute", right: isMobile ? 14 : 28, top: isMobile ? 31 : 36, pointerEvents: "auto", display: "flex", gap: 2, background: "rgba(252,252,251,0.95)", borderRadius: 999, padding: 3, boxShadow: "0 6px 18px rgba(10,20,40,0.22)" }}>
+          {(["en", "my"] as const).map(l => (
+            <button key={l} onClick={() => setLang(l)} aria-pressed={lang === l} title={l === "en" ? "English" : "မြန်မာ"}
+              style={{ border: "none", cursor: "pointer", borderRadius: 999, padding: isMobile ? "5px 9px" : "6px 12px", fontSize: 11, fontWeight: 700, letterSpacing: "0.06em", fontFamily: "'Inter',sans-serif",
+                background: lang === l ? "#1B3A6E" : "transparent", color: lang === l ? "#fff" : "#1B3A6E", transition: "background 160ms, color 160ms" }}>
+              {l === "en" ? "EN" : "MY"}
+            </button>
+          ))}
+        </div>
       </nav>
 
       {/* Hero */}
       <div className="pt-24 pb-14 sm:pt-32 sm:pb-24 px-5 text-center" style={{ maxWidth: 640, margin: "0 auto", position: "relative", zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}>
-          <h1 style={{ fontFamily: "'Nunito',sans-serif", fontSize: isMobile ? 28 : isTablet ? 38 : 46, fontWeight: 900, color: "#1B3A6E", lineHeight: 1.18, marginBottom: 14, letterSpacing: "-0.02em" }}>
-            Level Up with{" "}
+          <h1 style={{ fontFamily: "'Nunito','Noto Sans Myanmar',sans-serif", fontSize: (isMobile ? 28 : isTablet ? 38 : 46) * (lang === "my" ? 0.82 : 1), fontWeight: 900, color: "#1B3A6E", lineHeight: lang === "my" ? 1.5 : 1.18, marginBottom: 14, letterSpacing: lang === "my" ? 0 : "-0.02em" }}>
+            {titleBefore}
             <span style={{ color: "#1B3A6E", position: "relative", display: "inline-block" }}>
               Smart Play
               <span style={{ position: "absolute", bottom: -3, left: 0, right: 0, height: 3, borderRadius: 99, background: "#FFD23F" }} />
             </span>
+            {titleAfter}
           </h1>
           <p style={{ fontSize: isMobile ? 14 : 15, color: "#374151", lineHeight: 1.72, maxWidth: 480, margin: "0 auto" }}>
-            Quiz practice, speaking, and games — three apps working together as your daily learning habit.
+            {t("Quiz practice, speaking, and games — three apps working together as your daily learning habit.")}
           </p>
         </motion.div>
       </div>
@@ -273,12 +292,12 @@ export function BundlePortal() {
             transition={{ duration: 2.4, repeat: Infinity, delay: 0.8, times: [0, 0.2, 0.38, 0.52, 0.66, 1],
               ease: ["easeOut", "easeIn", "easeOut", "easeIn", "linear"] }}
           >
-            <FolderFull pkg={SMART_PLAY} onOpen={() => setModalOpen(true)} isMobile={isMobile} />
+            <FolderFull pkg={SMART_PLAY} onOpen={() => setModalOpen(true)} isMobile={isMobile} t={t} />
           </motion.div>
         </motion.div>
       </div>
 
-      {modalOpen && <Modal pkg={SMART_PLAY} onClose={() => setModalOpen(false)} onOpenCatalog={() => setCatalogOpen(true)} isMobile={isMobile} />}
+      {modalOpen && <Modal pkg={SMART_PLAY} onClose={() => setModalOpen(false)} onOpenCatalog={() => setCatalogOpen(true)} isMobile={isMobile} t={t} />}
       {catalogOpen && <PlayVerseCatalog logo={playverseMark} onClose={() => setCatalogOpen(false)} isMobile={isMobile} />}
     </div>
   );
